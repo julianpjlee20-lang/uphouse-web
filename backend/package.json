@@ -1,0 +1,16 @@
+{
+  "name": "uphouse-backend",
+  "version": "1.0.0",
+  "description": "向上建設 CMS 後端",
+  "main": "index.js",
+  "scripts": {
+    "develop": "strapi develop",
+    "start": "strapi start",
+    "build": "strapi build"
+  },
+  "dependencies": {
+    "@strapi/strapi": "^5.0.0",
+    "@strapi/plugin-users-permissions": "^5.0.0",
+    "@strapi/plugin-cloud": "^5.0.0"
+  }
+}
