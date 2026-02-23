@@ -1,13 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from "next/image";
 
 export default function Home() {
   const [darkMode, setDarkMode] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   useEffect(() => {
-    // 檢查本地存儲
     const saved = localStorage.getItem('theme');
     if (saved) {
       setDarkMode(saved === 'dark');
@@ -20,26 +19,41 @@ export default function Home() {
     localStorage.setItem('theme', newMode ? 'dark' : 'light');
   };
 
+  const navLinks = [
+    { href: '#about', label: '關於我們' },
+    { href: '#projects', label: '建案資訊' },
+    { href: '#news', label: '最新消息' },
+    { href: '#contact', label: '聯絡我們' },
+  ];
+
   return (
     <div className={`min-h-screen ${darkMode ? 'bg-[#0F0F0F]' : 'bg-[#FAF8F3]'} ${darkMode ? 'text-white' : 'text-[#1A1A1A]'}`}>
       {/* Header */}
-      <header className={`fixed top-0 left-0 right-0 z-50 ${darkMode ? 'bg-[#0F0F0F]/80' : 'bg-[#FAF8F3]/80'} backdrop-blur-md border-b ${darkMode ? 'border-white/5' : 'border-[#E5E5E5]'}`}>
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <header className={`fixed top-0 left-0 right-0 z-50 ${darkMode ? 'bg-[#0F0F0F]/95' : 'bg-[#FAF8F3]/95'} backdrop-blur-md border-b ${darkMode ? 'border-white/5' : 'border-[#E5E5E5]'}`}>
+        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+          {/* Logo */}
           <div className="flex items-center gap-3">
-            <div className={`w-8 h-8 rounded-lg bg-gradient-to-br from-[#316745] to-[#7DB892] flex items-center justify-center`}>
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#316745] to-[#7DB892] flex items-center justify-center">
               <span className="text-white font-bold text-sm">向</span>
             </div>
             <span className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-[#1A1A1A]'}`}>向上建設</span>
           </div>
           
+          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-6 text-sm">
-            <a href="#about" className={`${darkMode ? 'text-white/60 hover:text-white' : 'text-[#666] hover:text-[#1A1A1A]'} transition-colors`}>關於我們</a>
-            <a href="#projects" className={`${darkMode ? 'text-white/60 hover:text-white' : 'text-[#666] hover:text-[#1A1A1A]'} transition-colors`}>建案資訊</a>
-            <a href="#news" className={`${darkMode ? 'text-white/60 hover:text-white' : 'text-[#666] hover:text-[#1A1A1A]'} transition-colors`}>最新消息</a>
-            <a href="#contact" className={`${darkMode ? 'text-white/60 hover:text-white' : 'text-[#666] hover:text-[#1A1A1A]'} transition-colors`}>聯絡我們</a>
+            {navLinks.map((link) => (
+              <a 
+                key={link.href} 
+                href={link.href} 
+                className={`${darkMode ? 'text-white/60 hover:text-white' : 'text-[#666] hover:text-[#1A1A1A]'} transition-colors`}
+              >
+                {link.label}
+              </a>
+            ))}
           </nav>
           
-          <div className="flex items-center gap-3">
+          {/* Actions */}
+          <div className="flex items-center gap-2">
             {/* Theme Toggle */}
             <button 
               onClick={toggleTheme}
@@ -57,15 +71,54 @@ export default function Home() {
               )}
             </button>
             
-            <button className="bg-[#316745] hover:bg-[#3D7A56] text-white px-5 py-2 rounded-lg text-sm font-medium transition-colors">
+            {/* Mobile Menu Button */}
+            <button 
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className={`md:hidden p-2 rounded-lg ${darkMode ? 'hover:bg-white/10' : 'hover:bg-[#E5E5E5]'}`}
+            >
+              <svg className={`w-6 h-6 ${darkMode ? 'text-white' : 'text-[#1A1A1A]'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                {mobileMenuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
+            
+            {/* Desktop CTA */}
+            <button className="hidden md:block bg-[#316745] hover:bg-[#3D7A56] text-white px-5 py-2 rounded-lg text-sm font-medium transition-colors">
               預約賞屋
             </button>
           </div>
         </div>
+        
+        {/* Mobile Menu Dropdown */}
+        {mobileMenuOpen && (
+          <div className={`md:hidden ${darkMode ? 'bg-[#0F0F0F]' : 'bg-[#FAF8F3]'} border-t ${darkMode ? 'border-white/5' : 'border-[#E5E5E5]'}`}>
+            <div className="px-4 py-3 space-y-3">
+              {navLinks.map((link) => (
+                <a 
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`block ${darkMode ? 'text-white/60 hover:text-white' : 'text-[#666] hover:text-[#1A1A1A]'}`}
+                >
+                  {link.label}
+                </a>
+              ))}
+              <button 
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full bg-[#316745] hover:bg-[#3D7A56] text-white px-5 py-3 rounded-lg text-sm font-medium transition-colors"
+              >
+                預約賞屋
+              </button>
+            </div>
+          </div>
+        )}
       </header>
 
       {/* Hero Section */}
-      <section className="h-screen flex items-center justify-center relative overflow-hidden pt-20">
+      <section className="h-screen flex items-center justify-center relative overflow-hidden pt-16 md:pt-20">
         <div className={`absolute inset-0 bg-gradient-to-br ${darkMode ? 'from-[#316745]/10' : 'from-[#316745]/5'} via-transparent to-transparent`} />
         
         <div className={`absolute inset-0 opacity-5 ${darkMode ? 'invert' : ''}`} style={{
@@ -74,28 +127,28 @@ export default function Home() {
           backgroundSize: '50px 50px'
         }} />
         
-        <div className="relative z-10 text-center px-6 max-w-3xl">
-          <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${darkMode ? 'bg-[#316745]/10 border border-[#316745]/20' : 'bg-[#316745]/10'} text-[#7DB892] text-xs mb-6`}>
+        <div className="relative z-10 text-center px-4 max-w-3xl">
+          <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${darkMode ? 'bg-[#316745]/10 border border-[#316745]/20' : 'bg-[#316745]/10'} text-[#7DB892] text-xs mb-4 md:mb-6`}>
             <span className="w-2 h-2 rounded-full bg-[#7DB892] animate-pulse"></span>
             苗栗後龍首購首選
           </div>
           
-          <h1 className={`text-5xl md:text-7xl font-bold mb-6 leading-tight ${darkMode ? 'text-white' : 'text-[#1A1A1A]'}`}>
+          <h1 className={`text-3xl md:text-5xl lg:text-7xl font-bold mb-4 md:mb-6 leading-tight ${darkMode ? 'text-white' : 'text-[#1A1A1A]'}`}>
             向上建設<br /><span className="text-[#7DB892]">向下扎根</span>
           </h1>
           
-          <p className={`text-xl mb-4 ${darkMode ? 'text-white/60' : 'text-[#666]'}`}>
+          <p className={`text-lg md:text-xl mb-3 md:mb-4 ${darkMode ? 'text-white/60' : 'text-[#666]'}`}>
             質感建材 × 設計美學 × 新工法
           </p>
-          <p className={`text-lg mb-8 ${darkMode ? 'text-white/40' : 'text-[#999]'}`}>
+          <p className={`text-base md:text-lg mb-6 md:mb-8 ${darkMode ? 'text-white/40' : 'text-[#999]'}`}>
             為每位屋主打造穩固舒適的理想家
           </p>
           
-          <div className="flex items-center justify-center gap-4">
-            <button className="bg-[#316745] hover:bg-[#3D7A56] text-white px-8 py-4 rounded-xl text-base font-medium transition-all hover:scale-105">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4">
+            <button className="w-full sm:w-auto bg-[#316745] hover:bg-[#3D7A56] text-white px-6 md:px-8 py-3 md:py-4 rounded-xl text-base font-medium transition-all hover:scale-105">
               立即預約賞屋
             </button>
-            <button className={`border ${darkMode ? 'border-white/10 hover:border-white/20 text-white/60 hover:text-white' : 'border-[#E5E5E5] hover:border-[#316745]/30 text-[#666] hover:text-[#1A1A1A]'} px-8 py-4 rounded-xl text-base font-medium transition-all`}>
+            <button className={`w-full sm:w-auto border px-6 md:px-8 py-3 md:py-4 rounded-xl text-base font-medium transition-all ${darkMode ? 'border-white/10 hover:border-white/20 text-white/60 hover:text-white' : 'border-[#E5E5E5] hover:border-[#316745]/30 text-[#666] hover:text-[#1A1A1A]'}`}>
               查看建案
             </button>
           </div>
@@ -103,29 +156,29 @@ export default function Home() {
       </section>
 
       {/* Brand Story */}
-      <section id="about" className={`py-24 px-6 ${darkMode ? 'bg-[#0F0F0F]' : 'bg-white'}`}>
+      <section id="about" className={`py-16 md:py-24 px-4 md:px-6 ${darkMode ? 'bg-[#0F0F0F]' : 'bg-white'}`}>
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className={`text-3xl font-semibold mb-4 ${darkMode ? 'text-white' : 'text-[#1A1A1A]'}`}>
+          <div className="text-center mb-10 md:mb-16">
+            <h2 className={`text-2xl md:text-3xl font-semibold mb-3 md:mb-4 ${darkMode ? 'text-white' : 'text-[#1A1A1A]'}`}>
               質感，是我們對建築的堅持
             </h2>
-            <p className={`${darkMode ? 'text-white/40' : 'text-[#666]'} max-w-2xl mx-auto`}>
+            <p className={`${darkMode ? 'text-white/40' : 'text-[#666]'} max-w-2xl mx-auto text-sm md:text-base`}>
               建築的價值，藏在看不見的地方。向上建設深信，真正的好房子，
               始於對建材的嚴選、對工法的鑽研、對細節的執著。
             </p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[
               { icon: '🏠', title: '質感建材', desc: '選用高品質建材，細節看得見、摸得到' },
               { icon: '🔧', title: '新工法', desc: '創新不守舊，穩固更耐久' },
               { icon: '🎨', title: '設計美學', desc: '空間規劃與美感，讓建築成為生活品味' }
             ].map((item, i) => (
-              <div key={i} className={`p-6 rounded-2xl border transition-all group ${darkMode ? 'bg-white/5 border-white/5 hover:border-[#316745]/30' : 'bg-[#FAF8F3] border-[#E5E5E5] hover:border-[#316745]/30'}`}>
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${darkMode ? 'bg-[#316745]/10 group-hover:bg-[#316745]/20' : 'bg-[#316745]/10'}`}>
-                  <span className="text-2xl">{item.icon}</span>
+              <div key={i} className={`p-4 md:p-6 rounded-2xl border transition-all group ${darkMode ? 'bg-white/5 border-white/5 hover:border-[#316745]/30' : 'bg-[#FAF8F3] border-[#E5E5E5] hover:border-[#316745]/30'}`}>
+                <div className={`w-10 md:w-12 h-10 md:h-12 rounded-xl flex items-center justify-center mb-3 md:mb-4 ${darkMode ? 'bg-[#316745]/10 group-hover:bg-[#316745]/20' : 'bg-[#316745]/10'}`}>
+                  <span className="text-xl md:text-2xl">{item.icon}</span>
                 </div>
-                <h3 className={`text-lg font-medium mb-2 ${darkMode ? 'text-white' : 'text-[#1A1A1A]'}`}>{item.title}</h3>
+                <h3 className={`text-base md:text-lg font-medium mb-1 md:mb-2 ${darkMode ? 'text-white' : 'text-[#1A1A1A]'}`}>{item.title}</h3>
                 <p className={`text-sm ${darkMode ? 'text-white/40' : 'text-[#666]'}`}>{item.desc}</p>
               </div>
             ))}
@@ -134,31 +187,31 @@ export default function Home() {
       </section>
 
       {/* Projects */}
-      <section id="projects" className={`py-24 px-6 ${darkMode ? 'bg-[#0A0A0A]' : 'bg-[#FAF8F3]'}`}>
+      <section id="projects" className={`py-16 md:py-24 px-4 md:px-6 ${darkMode ? 'bg-[#0A0A0A]' : 'bg-[#FAF8F3]'}`}>
         <div className="max-w-6xl mx-auto">
-          <div className="flex items-center justify-between mb-12">
-            <h2 className={`text-3xl font-semibold ${darkMode ? 'text-white' : 'text-[#1A1A1A]'}`}>最新建案</h2>
+          <div className="flex items-center justify-between mb-8 md:mb-12">
+            <h2 className={`text-2xl md:text-3xl font-semibold ${darkMode ? 'text-white' : 'text-[#1A1A1A]'}`}>最新建案</h2>
             <button className="text-[#7DB892] hover:text-[#8EC9A3] text-sm font-medium transition-colors">
               查看全部 →
             </button>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
             {[1, 2, 3].map((i) => (
               <div key={i} className={`group rounded-2xl border overflow-hidden transition-all ${darkMode ? 'bg-white/5 border-white/5 hover:border-[#316745]/30' : 'bg-white border-[#E5E5E5] hover:border-[#316745]/30'}`}>
-                <div className={`h-48 ${darkMode ? 'bg-gradient-to-br from-[#316745]/20 to-[#0A0A0A]' : 'bg-gradient-to-br from-[#316745]/10 to-[#FAF8F3]'} relative`}>
+                <div className={`h-40 md:h-48 ${darkMode ? 'bg-gradient-to-br from-[#316745]/20 to-[#0A0A0A]' : 'bg-gradient-to-br from-[#316745]/10 to-[#FAF8F3]'} relative`}>
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <span className={`text-4xl font-bold ${darkMode ? 'text-white/10' : 'text-[#316745]/20'}`}>{i}</span>
+                    <span className={`text-5xl md:text-6xl font-bold ${darkMode ? 'text-white/10' : 'text-[#316745]/20'}`}>{i}</span>
                   </div>
-                  <div className={`absolute top-4 left-4 px-3 py-1 rounded-lg ${darkMode ? 'bg-[#316745]/20' : 'bg-[#316745]/10'} text-[#7DB892] text-xs`}>
+                  <div className={`absolute top-3 md:top-4 left-3 md:left-4 px-2 md:px-3 py-1 rounded-lg ${darkMode ? 'bg-[#316745]/20' : 'bg-[#316745]/10'} text-[#7DB892] text-xs`}>
                     預售中
                   </div>
                 </div>
-                <div className="p-5">
-                  <h3 className={`text-lg font-medium mb-1 group-hover:text-[#7DB892] transition-colors ${darkMode ? 'text-white' : 'text-[#1A1A1A]'}`}>
+                <div className="p-4 md:p-5">
+                  <h3 className={`text-base md:text-lg font-medium mb-1 group-hover:text-[#7DB892] transition-colors ${darkMode ? 'text-white' : 'text-[#1A1A1A]'}`}>
                     向上建設 No.{i}
                   </h3>
-                  <p className={`text-sm mb-4 ${darkMode ? 'text-white/40' : 'text-[#666]'}`}>苗栗縣後龍鎮 • 35-45坪</p>
+                  <p className={`text-sm mb-3 md:mb-4 ${darkMode ? 'text-white/40' : 'text-[#666]'}`}>苗栗縣後龍鎮 • 35-45坪</p>
                   <button className="text-[#7DB892] text-sm font-medium hover:text-[#8EC9A3] transition-colors">
                     了解詳情 →
                   </button>
@@ -170,22 +223,22 @@ export default function Home() {
       </section>
 
       {/* Why Choose Us */}
-      <section className={`py-24 px-6 ${darkMode ? 'bg-[#0F0F0F]' : 'bg-white'}`}>
+      <section className={`py-16 md:py-24 px-4 md:px-6 ${darkMode ? 'bg-[#0F0F0F]' : 'bg-white'}`}>
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className={`text-3xl font-semibold mb-16 ${darkMode ? 'text-white' : 'text-[#1A1A1A]'}`}>為什麼選擇向上建設？</h2>
+          <h2 className={`text-2xl md:text-3xl font-semibold mb-10 md:mb-16 ${darkMode ? 'text-white' : 'text-[#1A1A1A]'}`}>為什麼選擇向上建設？</h2>
           
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               { icon: '👁️', title: '看不見的用心', desc: '每個細節都講究，換得見的安心' },
               { icon: '🌱', title: '向下扎根', desc: '根穩樓高，根基扎實才撐得起您的家' },
               { icon: '✨', title: '恰到好處', desc: '不多不少，剛好是家' }
             ].map((item, i) => (
               <div key={i} className="text-center">
-                <div className={`w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-4 ${darkMode ? 'bg-[#316745]/10' : 'bg-[#316745]/10'}`}>
-                  <span className="text-3xl">{item.icon}</span>
+                <div className={`w-14 md:w-16 h-14 md:h-16 mx-auto rounded-2xl flex items-center justify-center mb-3 md:mb-4 ${darkMode ? 'bg-[#316745]/10' : 'bg-[#316745]/10'}`}>
+                  <span className="text-2xl md:text-3xl">{item.icon}</span>
                 </div>
-                <h3 className={`text-lg font-medium mb-2 ${darkMode ? 'text-white' : 'text-[#1A1A1A]'}`}>{item.title}</h3>
-                <p className={`${darkMode ? 'text-white/40' : 'text-[#666]'}`}>{item.desc}</p>
+                <h3 className={`text-base md:text-lg font-medium mb-1 md:mb-2 ${darkMode ? 'text-white' : 'text-[#1A1A1A]'}`}>{item.title}</h3>
+                <p className={`text-sm ${darkMode ? 'text-white/40' : 'text-[#666]'}`}>{item.desc}</p>
               </div>
             ))}
           </div>
@@ -193,10 +246,10 @@ export default function Home() {
       </section>
 
       {/* Contact */}
-      <section id="contact" className={`py-24 px-6 ${darkMode ? 'bg-[#0A0A0A]' : 'bg-[#FAF8F3]'}`}>
+      <section id="contact" className={`py-16 md:py-24 px-4 md:px-6 ${darkMode ? 'bg-[#0A0A0A]' : 'bg-[#FAF8F3]'}`}>
         <div className="max-w-xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className={`text-3xl font-semibold mb-4 ${darkMode ? 'text-white' : 'text-[#1A1A1A]'}`}>
+          <div className="text-center mb-8 md:mb-12">
+            <h2 className={`text-2xl md:text-3xl font-semibold mb-2 md:mb-4 ${darkMode ? 'text-white' : 'text-[#1A1A1A]'}`}>
               立即預約，實現您的理想家
             </h2>
             <p className={darkMode ? 'text-white/40' : 'text-[#666]'}>
@@ -204,24 +257,24 @@ export default function Home() {
             </p>
           </div>
           
-          <form className="space-y-4">
+          <form className="space-y-3 md:space-y-4">
             <div>
-              <label className={`block text-sm mb-2 ${darkMode ? 'text-white/60' : 'text-[#666]'}`}>姓名</label>
-              <input type="text" className={`w-full px-4 py-3 rounded-xl transition-colors ${darkMode ? 'bg-white/5 border border-white/10 text-white focus:border-[#316745]' : 'bg-white border border-[#E5E5E5] text-[#1A1A1A] focus:border-[#316745]'} focus:outline-none`} placeholder="您的姓名" />
+              <label className={`block text-sm mb-1 md:mb-2 ${darkMode ? 'text-white/60' : 'text-[#666]'}`}>姓名</label>
+              <input type="text" className={`w-full px-3 md:px-4 py-2 md:py-3 rounded-xl transition-colors text-sm md:text-base ${darkMode ? 'bg-white/5 border border-white/10 text-white focus:border-[#316745]' : 'bg-white border border-[#E5E5E5] text-[#1A1A1A] focus:border-[#316745]'} focus:outline-none`} placeholder="您的姓名" />
             </div>
             <div>
-              <label className={`block text-sm mb-2 ${darkMode ? 'text-white/60' : 'text-[#666]'}`}>電話</label>
-              <input type="tel" className={`w-full px-4 py-3 rounded-xl transition-colors ${darkMode ? 'bg-white/5 border border-white/10 text-white focus:border-[#316745]' : 'bg-white border border-[#E5E5E5] text-[#1A1A1A] focus:border-[#316745]'} focus:outline-none`} placeholder="09XX-XXX-XXX" />
+              <label className={`block text-sm mb-1 md:mb-2 ${darkMode ? 'text-white/60' : 'text-[#666]'}`}>電話</label>
+              <input type="tel" className={`w-full px-3 md:px-4 py-2 md:py-3 rounded-xl transition-colors text-sm md:text-base ${darkMode ? 'bg-white/5 border border-white/10 text-white focus:border-[#316745]' : 'bg-white border border-[#E5E5E5] text-[#1A1A1A] focus:border-[#316745]'} focus:outline-none`} placeholder="09XX-XXX-XXX" />
             </div>
             <div>
-              <label className={`block text-sm mb-2 ${darkMode ? 'text-white/60' : 'text-[#666]'}`}>Email</label>
-              <input type="email" className={`w-full px-4 py-3 rounded-xl transition-colors ${darkMode ? 'bg-white/5 border border-white/10 text-white focus:border-[#316745]' : 'bg-white border border-[#E5E5E5] text-[#1A1A1A] focus:border-[#316745]'} focus:outline-none`} placeholder="your@email.com" />
+              <label className={`block text-sm mb-1 md:mb-2 ${darkMode ? 'text-white/60' : 'text-[#666]'}`}>Email</label>
+              <input type="email" className={`w-full px-3 md:px-4 py-2 md:py-3 rounded-xl transition-colors text-sm md:text-base ${darkMode ? 'bg-white/5 border border-white/10 text-white focus:border-[#316745]' : 'bg-white border border-[#E5E5E5] text-[#1A1A1A] focus:border-[#316745]'} focus:outline-none`} placeholder="your@email.com" />
             </div>
             <div>
-              <label className={`block text-sm mb-2 ${darkMode ? 'text-white/60' : 'text-[#666]'}`}>留言</label>
-              <textarea rows={4} className={`w-full px-4 py-3 rounded-xl transition-colors ${darkMode ? 'bg-white/5 border border-white/10 text-white focus:border-[#316745]' : 'bg-white border border-[#E5E5E5] text-[#1A1A1A] focus:border-[#316745]'} focus:outline-none`} placeholder="告訴我們您的需求..."></textarea>
+              <label className={`block text-sm mb-1 md:mb-2 ${darkMode ? 'text-white/60' : 'text-[#666]'}`}>留言</label>
+              <textarea rows={4} className={`w-full px-3 md:px-4 py-2 md:py-3 rounded-xl transition-colors text-sm md:text-base ${darkMode ? 'bg-white/5 border border-white/10 text-white focus:border-[#316745]' : 'bg-white border border-[#E5E5E5] text-[#1A1A1A] focus:border-[#316745]'} focus:outline-none`} placeholder="告訴我們您的需求..."></textarea>
             </div>
-            <button type="submit" className="w-full bg-[#316745] hover:bg-[#3D7A56] text-white py-4 rounded-xl text-base font-medium transition-all hover:scale-[1.02]">
+            <button type="submit" className="w-full bg-[#316745] hover:bg-[#3D7A56] text-white py-3 md:py-4 rounded-xl text-base font-medium transition-all hover:scale-[1.02]">
               送出預約
             </button>
           </form>
@@ -229,15 +282,15 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className={`py-8 px-6 ${darkMode ? 'bg-[#0F0F0F] border-t border-white/5' : 'bg-white border-t border-[#E5E5E5]'}`}>
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      <footer className={`py-6 md:py-8 px-4 md:px-6 ${darkMode ? 'bg-[#0F0F0F] border-t border-white/5' : 'bg-white border-t border-[#E5E5E5]'}`}>
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 md:gap-4">
           <div className="flex items-center gap-3">
             <div className="w-6 h-6 rounded-md bg-gradient-to-br from-[#316745] to-[#7DB892] flex items-center justify-center">
               <span className="text-white font-bold text-xs">向</span>
             </div>
             <span className={darkMode ? 'text-white/60 text-sm' : 'text-[#666] text-sm'}>向上建設股份有限公司</span>
           </div>
-          <div className={`flex items-center gap-6 text-sm ${darkMode ? 'text-white/40' : 'text-[#999]'}`}>
+          <div className={`flex items-center gap-4 md:gap-6 text-xs md:text-sm ${darkMode ? 'text-white/40' : 'text-[#999]'}`}>
             <span>電話：03-XXXX-XXXX</span>
             <span>苗栗縣後龍鎮</span>
           </div>
