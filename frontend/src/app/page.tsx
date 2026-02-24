@@ -91,10 +91,6 @@ export default function Home() {
     return new Intl.NumberFormat('zh-TW').format(price);
   };
 
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   const navLinks = [
     { href: '#about', label: '關於我們' },
     { href: '#projects', label: '建案資訊' },
@@ -116,13 +112,13 @@ export default function Home() {
           
           <nav className="hidden md:flex items-center gap-6 text-sm">
             {navLinks.map((link) => (
-              <button 
+              <a 
                 key={link.href} 
-                onClick={() => scrollTo(link.href)}
+                href={link.href}
                 className={`${darkMode ? 'text-white/60 hover:text-white' : 'text-[#666] hover:text-[#1A1A1A]'} transition-colors`}
               >
                 {link.label}
-              </button>
+              </a>
             ))}
           </nav>
           
@@ -156,9 +152,9 @@ export default function Home() {
               </svg>
             </button>
             
-            <button onClick={() => scrollTo('contact')} className="hidden md:block bg-[#316745] hover:bg-[#3D7A56] text-white px-5 py-2 rounded-lg text-sm font-medium transition-colors">
+            <a href="#contact" className="hidden md:block bg-[#316745] hover:bg-[#3D7A56] text-white px-5 py-2 rounded-lg text-sm font-medium transition-colors">
               預約賞屋
-            </button>
+            </a>
           </div>
         </div>
         
@@ -166,20 +162,22 @@ export default function Home() {
           <div className={`md:hidden ${darkMode ? 'bg-[#0F0F0F]' : 'bg-[#FAF8F3]'} border-t ${darkMode ? 'border-white/5' : 'border-[#E5E5E5]'}`}>
             <div className="px-4 py-3 space-y-3">
               {navLinks.map((link) => (
-                <button 
+                <a 
                   key={link.href}
-                  onClick={() => { scrollTo(link.href); setMobileMenuOpen(false); }}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
                   className={`block w-full text-left ${darkMode ? 'text-white/60 hover:text-white' : 'text-[#666] hover:text-[#1A1A1A]'}`}
                 >
                   {link.label}
-                </button>
+                </a>
               ))}
-              <button 
-                onClick={() => { scrollTo('contact'); setMobileMenuOpen(false); }}
+              <a 
+                href="#contact"
+                onClick={() => setMobileMenuOpen(false)}
                 className="w-full bg-[#316745] hover:bg-[#3D7A56] text-white px-5 py-3 rounded-lg text-sm font-medium transition-colors"
               >
                 預約賞屋
-              </button>
+              </a>
             </div>
           </div>
         )}
@@ -213,12 +211,12 @@ export default function Home() {
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4">
-            <button onClick={() => scrollTo('contact')} className="w-full sm:w-auto bg-[#316745] hover:bg-[#3D7A56] text-white px-6 md:px-8 py-3 md:py-4 rounded-xl text-base font-medium transition-all hover:scale-105">
+            <a href="#contact" className="w-full sm:w-auto bg-[#316745] hover:bg-[#3D7A56] text-white px-6 md:px-8 py-3 md:py-4 rounded-xl text-base font-medium transition-all hover:scale-105">
               立即預約賞屋
-            </button>
-            <button onClick={() => scrollTo('projects')} className="w-full sm:w-auto border px-6 md:px-8 py-3 md:py-4 rounded-xl text-base font-medium transition-all border-white/10 hover:border-white/20 text-white/60 hover:text-white">
+            </a>
+            <a href="#projects" className="w-full sm:w-auto border px-6 md:px-8 py-3 md:py-4 rounded-xl text-base font-medium transition-all border-white/10 hover:border-white/20 text-white/60 hover:text-white">
               查看建案
-            </button>
+            </a>
           </div>
         </div>
       </section>
@@ -263,7 +261,7 @@ export default function Home() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
               {projects.map((project) => (
-                <div key={project.id} className={`group rounded-2xl border overflow-hidden transition-all ${darkMode ? 'bg-white/5 border-white/5 hover:border-[#316745]/30' : 'bg-white border-[#E5E5E5] hover:border-[#316745]/30'}`}>
+                <a key={project.id} href={`/projects/${project.id}`} className={`group rounded-2xl border overflow-hidden transition-all ${darkMode ? 'bg-white/5 border-white/5 hover:border-[#316745]/30' : 'bg-white border-[#E5E5E5] hover:border-[#316745]/30'}`}>
                   <div className={`h-40 md:h-48 ${darkMode ? 'bg-gradient-to-br from-[#316745]/20 to-[#0A0A0A]' : 'bg-gradient-to-br from-[#316745]/10 to-[#FAF8F3]'} relative`}>
                     <div className="absolute inset-0 flex items-center justify-center">
                       <span className={`text-5xl md:text-6xl font-bold ${darkMode ? 'text-white/10' : 'text-[#316745]/20'}`}>🏢</span>
@@ -281,11 +279,11 @@ export default function Home() {
                     <p className={`text-lg font-semibold text-[#7DB892] mb-3`}>
                       {formatPrice(project.price)} 萬起
                     </p>
-                    <a href={`/projects/${project.id}`} className="text-[#7DB892] text-sm font-medium hover:text-[#8EC9A3] transition-colors">
+                    <span className="text-[#7DB892] text-sm font-medium group-hover:text-[#8EC9A3] transition-colors">
                       查看詳情 →
-                    </a>
+                    </span>
                   </div>
-                </div>
+                </a>
               ))}
             </div>
           )}
@@ -306,7 +304,7 @@ export default function Home() {
           ) : (
             <div className="space-y-4">
               {articles.slice(0, 3).map((article) => (
-                <div key={article.id} className={`p-4 md:p-6 rounded-2xl border transition-all ${darkMode ? 'bg-white/5 border-white/5 hover:border-[#316745]/30' : 'bg-white border-[#E5E5E5] hover:border-[#316745]/30'}`}>
+                <a key={article.id} href={`/news/${article.id}`} className={`p-4 md:p-6 rounded-2xl border transition-all block ${darkMode ? 'bg-white/5 border-white/5 hover:border-[#316745]/30' : 'bg-white border-[#E5E5E5] hover:border-[#316745]/30'}`}>
                   <div className="flex items-start justify-between gap-4">
                     <div>
                       <h3 className={`text-lg font-medium mb-2 ${darkMode ? 'text-white' : 'text-[#1A1A1A]'}`}>{article.title}</h3>
@@ -318,7 +316,7 @@ export default function Home() {
                       {new Date(article.publishedAt).toLocaleDateString('zh-TW')}
                     </span>
                   </div>
-                </div>
+                </a>
               ))}
             </div>
           )}
