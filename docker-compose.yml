@@ -9,7 +9,24 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=production
-      - NEXT_PUBLIC_API_URL=http://localhost:3000/api
+      - NEXT_PUBLIC_API_URL=http://cms:1337
+    restart: unless-stopped
+    depends_on:
+      - cms
+
+  cms:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "1337:1337"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=uphouse
+      - DATABASE_USERNAME=uphouse
+      - DATABASE_PASSWORD=uphouse123
     restart: unless-stopped
     depends_on:
       - postgres
