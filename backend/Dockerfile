@@ -9,6 +9,10 @@ RUN mkdir -p public/uploads
 COPY package*.json ./
 RUN npm install
 
+# Copy configuration and source files
+COPY config ./config
+COPY src ./src
+
 # Build Strapi
 RUN npm run build
 
