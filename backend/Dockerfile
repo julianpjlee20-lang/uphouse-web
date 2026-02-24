@@ -2,6 +2,9 @@ FROM node:20-alpine
 
 WORKDIR /app
 
+# Create necessary directories
+RUN mkdir -p public/uploads
+
 # Install dependencies
 COPY package*.json ./
 RUN npm install
