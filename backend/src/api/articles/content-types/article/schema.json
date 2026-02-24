@@ -1,9 +1,9 @@
 {
   "kind": "collectionType",
-  "collectionName": "news",
+  "collectionName": "articles",
   "info": {
-    "singularName": "news",
-    "pluralName": "news",
+    "singularName": "article",
+    "pluralName": "articles",
     "displayName": "最新消息",
     "description": "最新消息"
   },
