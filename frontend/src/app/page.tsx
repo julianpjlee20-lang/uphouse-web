@@ -19,7 +19,7 @@ interface Article {
   publishedAt: string;
 }
 
-const CMS_API = 'http://202.182.98.169:1337/api';
+const CMS_API = '/api';
 
 export default function Home() {
   const [darkMode, setDarkMode] = useState(true);
