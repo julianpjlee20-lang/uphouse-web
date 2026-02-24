@@ -281,9 +281,9 @@ export default function Home() {
                     <p className={`text-lg font-semibold text-[#7DB892] mb-3`}>
                       {formatPrice(project.price)} 萬起
                     </p>
-                    <button onClick={() => scrollTo('contact')} className="text-[#7DB892] text-sm font-medium hover:text-[#8EC9A3] transition-colors">
-                      立即預約 →
-                    </button>
+                    <a href={`/projects/${project.id}`} className="text-[#7DB892] text-sm font-medium hover:text-[#8EC9A3] transition-colors">
+                      查看詳情 →
+                    </a>
                   </div>
                 </div>
               ))}
