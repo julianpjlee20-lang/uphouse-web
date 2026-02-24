@@ -252,6 +252,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between mb-8 md:mb-12">
             <h2 className={`text-2xl md:text-3xl font-semibold ${darkMode ? 'text-white' : 'text-[#1A1A1A]'}`}>最新建案</h2>
+            <a href="/projects" className="text-[#7DB892] hover:text-[#8EC9A3] text-sm font-medium transition-colors">查看全部 →</a>
           </div>
           
           {loading ? (
