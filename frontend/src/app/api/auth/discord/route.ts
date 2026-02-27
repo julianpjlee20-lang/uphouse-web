@@ -3,9 +3,11 @@ import { NextResponse } from 'next/server';
 // Discord OAuth config
 const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID;
 const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
-const DISCORD_REDIRECT_URI = process.env.DISCORD_REDIRECT_URI || 'http://localhost:3000/api/auth/discord/callback';
+const DISCORD_REDIRECT_URI = process.env.DISCORD_REDIRECT_URI || ''; // Auto-detect in request
 
-export async function POST() {
+export async function POST(request: Request) {
+  const baseUrl = request.headers.get('x-forwarded-proto') + '://' + request.headers.get('host');
+  const redirectUri = DISCORD_REDIRECT_URI || `${baseUrl}/api/auth/discord/callback`;
   try {
     if (!DISCORD_CLIENT_ID || !DISCORD_CLIENT_SECRET) {
       return NextResponse.json(
@@ -23,7 +25,7 @@ export async function POST() {
     // Build Discord OAuth URL
     const params = new URLSearchParams({
       client_id: DISCORD_CLIENT_ID,
-      redirect_uri: DISCORD_REDIRECT_URI,
+      redirect_uri: redirectUri,
       response_type: 'code',
       scope: 'identify email',
       state,

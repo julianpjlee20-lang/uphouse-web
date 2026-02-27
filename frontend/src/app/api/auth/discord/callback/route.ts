@@ -2,9 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID;
 const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
-const DISCORD_REDIRECT_URI = process.env.DISCORD_REDIRECT_URI || 'http://localhost:3000/api/auth/discord/callback';
+const DISCORD_REDIRECT_URI = process.env.DISCORD_REDIRECT_URI || ''; // Auto-detect in request
 
 export async function GET(request: NextRequest) {
+  const baseUrl = request.headers.get('x-forwarded-proto') + '://' + request.headers.get('host');
+  const redirectUri = DISCORD_REDIRECT_URI || `${baseUrl}/api/auth/discord/callback`;
   try {
     const searchParams = request.nextUrl.searchParams;
     const code = searchParams.get('code');
@@ -39,7 +41,7 @@ export async function GET(request: NextRequest) {
         client_secret: DISCORD_CLIENT_SECRET!,
         grant_type: 'authorization_code',
         code,
-        redirect_uri: DISCORD_REDIRECT_URI,
+        redirect_uri: redirectUri,
       }),
     });
 
